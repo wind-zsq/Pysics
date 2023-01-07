@@ -4,9 +4,8 @@ It's based on a well-known GUI library: pygame.
 (It's not finished yet!)
 
 # How to use
-Nothing! \n
+Nothing!
 
 # About us
-We are senior students from Shanghai, China. 
 Our email account: 1766954774@qq.com
 Welcom to support us! 
