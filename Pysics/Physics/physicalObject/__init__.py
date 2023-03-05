@@ -1,2 +1,2 @@
 from .physicalObject import *
-from .virtualObject import *
+from .physicalPoint import *
