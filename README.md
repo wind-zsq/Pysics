@@ -5,7 +5,7 @@ A Python library, it is a 3D rendering and physics engine library based on pygam
 # How To Use
 
 1. import the packages:
-> import pygame
+> import pygame\
 > import pysics
 2. Create a World: 
 > screen = pygame.display.set_mode((width,&nbsp;height))\
