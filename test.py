@@ -1,7 +1,7 @@
 import sys
 import pygame
 
-from Pysics import *
+import pysics
 
 pygame.init()
 size = width, height = 1200, 800
@@ -34,17 +34,19 @@ def message(text, x, y, size, type):
 
 
 # 创建世界
-w = World(screen)
+w = pysics.world.World(screen)
 
 # 导入模型
-c = RenderModel("cube.md3")
-cube = RigidBody3D(w, c, (1, 1, 1), 10, False)
+c = pysics.model.Model("cube.md3")
+cube = pysics.physics.rigidBody.RigidBody3D(w, c, (1, 1, 1), 10, False)
 
 # 键盘按键
 keys = pygame.key.get_pressed()
 
 # 移动相机
 w.camera.move(-15, 0, 0)
+
+paused = False
 
 while 1:
     keys = pygame.key.get_pressed()
@@ -55,15 +57,21 @@ while 1:
             sys.exit()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                pygame.quit()
-                sys.exit()
+                paused = not paused
         # 相应鼠标转动视角
         if event.type == pygame.MOUSEMOTION:
-            direct = event.rel
-            # 水平转动
-            w.camera.rotate_horizontal(-direct[0] / 250)
-            # 竖直转动
-            w.camera.rotate_vertical(-direct[1] / 250)
+            if not paused:
+                direct = event.rel
+                # 水平转动
+                w.camera.rotate_horizontal(-direct[0] / 250)
+                # 竖直转动
+                w.camera.rotate_vertical(-direct[1] / 250)
+
+    if paused:
+        pygame.mouse.set_visible(True)
+    else:
+        pygame.mouse.set_pos(width / 2, height / 2)
+        pygame.mouse.set_visible(False)
 
     # 相应鼠标移动相机
     if keys[pygame.K_w]:
@@ -78,9 +86,6 @@ while 1:
         w.camera.move(0, 0, 0.2)
     if keys[pygame.K_LSHIFT]:
         w.camera.move(0, 0, -0.2)
-
-    pygame.mouse.set_pos(width / 2, height / 2)
-    pygame.mouse.set_visible(False)
 
     screen.fill((255, 255, 255))
     w.update()
@@ -100,10 +105,10 @@ while 1:
     )
 
     message(f"fps: {round(clock.get_fps())}", 10, 10, 30, ("l", "t"))
-    message(f"sight: {w.camera.sight}", 10, 35, 30, ("l", "t"))
+    message(f"pause: {paused}", 10, 35, 30, ("l", "t"))
     message(f"pos: ({round(w.camera.pos[0], 3)}, "
             f"{round(w.camera.pos[1], 3)}, "
             f"{round(w.camera.pos[2], 3)})", 10, 60, 30, ("l", "t"))
 
     pygame.display.update()
-    clock.tick(30)
+    clock.tick(50)
